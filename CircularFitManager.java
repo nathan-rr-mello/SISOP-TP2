@@ -1,15 +1,9 @@
-import java.util.LinkedList;
-import java.util.List;
+public class CircularFitManager extends MemoryManager {
 
-public class CircularFitManager {
-
-    int size;
-    List<Partition> memory;
     int pointer;
 
     public CircularFitManager(int size) {
-        this.size = size;
-        this.memory = new LinkedList<>();
+        super(size);
         this.pointer = 0;
     }
 
@@ -18,53 +12,51 @@ public class CircularFitManager {
         if (memory.size() == 0) {
             Partition part = new Partition(0, proc.size, proc);
             memory.add(part);
+            pointer = 0;
             return;
         }
 
-        int start = memory.get(pointer).end;
-        for (int i = pointer + 1; i != pointer; i = (i + 1) % memory.size()) {
+        int i = pointer;
+        do {
+
             if (i == memory.size() - 1) {
-                if (size - start > proc.size) {
-                    Partition part = new Partition(start, start + proc.size, proc);
+                Partition curr = memory.get(i);
+                if (super.size - memory.get(i).end >= proc.size) {
+                    Partition part = new Partition(curr.end, curr.end + proc.size, proc);
                     memory.add(part);
+                    pointer = i + 1;
+                    return;
+                } else if (memory.get(0).start >= proc.size) {
+                    Partition part = new Partition(0, proc.size, proc);
+                    memory.add(0, part);
+                    pointer = 0;
                     return;
                 }
-            }
-
-            Partition currentPartition = memory.get(i);
-            if (currentPartition.start - start >= proc.size) {
+            } else if (memory.get(i+1).start - memory.get(i).end >= proc.size) {
+                int start = memory.get(i).end;
                 Partition part = new Partition(start, start + proc.size, proc);
-                memory.add(i, part);
+                memory.add(i+1, part);
+                pointer = i+1;
                 return;
             }
 
-            start = currentPartition.end;
-            
-        }
+            i = (i+1) % memory.size();
+        }while(i != pointer);
 
         System.out.println("[ERROR] - THERE IS NO SPACE LEFT ON DISK");
     }
 
     public void Out(String pid) {
-        memory.removeIf(partition -> partition.proc.pid.equals(pid));
-    }
 
-    public void Print() {
-
-        int start = 0;
         for (int i = 0; i < memory.size(); i++) {
             Partition part = memory.get(i);
-            if (part.start - start > 0) {
-                System.out.printf("[FREE] - START %d - END %d\n", start, part.start);
+            if (part.proc.pid.equals(pid)) {
+                memory.remove(i);
+                if (i <= pointer) {
+                    pointer--;
+                }
+                return;
             }
-            System.out.printf("[%s] - START %d - END %d\n", part.proc.pid, part.start, part.end);
-            start = part.end;
-        }
-
-        if (start < size) {
-            System.out.printf("[FREE] - START %d - END %d\n", start, this.size);
         }
     }
-
-
 }

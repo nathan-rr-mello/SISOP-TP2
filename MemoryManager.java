@@ -1,57 +1,18 @@
 import java.util.LinkedList;
 import java.util.List;
 
-public class MemoryManager {
+public abstract class MemoryManager {
     
-    List<Partition> memory;
     int size;
+    List<Partition>memory;
 
     public MemoryManager(int size) {
-        memory = new LinkedList<>();
         this.size = size;
+        this.memory =  new LinkedList<>();
     }
 
-    //WORST FIT IMPLEMENTATION
-    public void In(Proccess proc) {
-
-        if (memory.size() == 0) {
-            Partition part = new Partition(0, proc.size, proc);
-            memory.add(part);
-            return;
-        }
-
-        int worstStart = 0;
-        int currentWorst = 0;
-        int indexToSwitch = -1;
-        int start = 0;
-        for (int i = 0; i < memory.size(); i++) {
-            Partition currPartition = memory.get(i);
-            int currentFreeSpace = currPartition.start - start;
-            if (currentFreeSpace > currentWorst) {
-                indexToSwitch = i;
-                currentWorst = currentFreeSpace;
-                worstStart = start;
-            }
-            start = currPartition.end;
-        }
-
-        if (this.size - start > currentWorst) {
-            Partition part = new Partition(start, start + proc.size, proc);
-            memory.add(part);
-            return;
-        }
-
-        if (indexToSwitch != -1) {
-            Partition part = new Partition(worstStart, worstStart + proc.size, proc);
-            memory.add(indexToSwitch, part);
-        } else {
-            System.out.println("[ERROR] - THERE IS NO SPACE LEFT ON DISK");
-        }
-    } 
-
-    public void Out(String pid) {
-        memory.removeIf(x -> x.proc.pid.equals(pid));
-    }
+    public abstract void In(Proccess proc);
+    public abstract void Out(String pid);
 
     public void Print() {
 

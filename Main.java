@@ -2,34 +2,24 @@ public class Main {
 
     public static void main(String[] args) {
         
-        MemoryManager mm = new MemoryManager(32);
+        MemoryManager mm = new WorstFitManager(32);
 
-        /* Proccess a = new Proccess("A", 8);
-        Proccess b = new Proccess("B", 16);
+        Proccess a = new Proccess("A", 8);
+        Proccess b = new Proccess("B", 8);
+
         mm.In(a);
         mm.In(b);
         mm.Print();
-        System.out.println("<==============>");
+        System.out.println("<====================>");
         mm.Out("A");
         mm.Print();
+        System.out.println("<====================>");
         Proccess c = new Proccess("C", 4);
         mm.In(c);
+        mm.Print();
         
-        mm.Print(); */
 
-        CircularFitManager cfm = new CircularFitManager(32);
-        Proccess a = new Proccess("A", 16);
-        Proccess b = new Proccess("B", 4);
-        Proccess c = new Proccess("C", 8);
 
-        cfm.In(a);
-        cfm.In(b);
-        cfm.Print();
-        System.out.println("<==============>");
-        cfm.Out("A");
-        cfm.Print();
-        System.out.println("<==============>");
-        cfm.In(c);
 
     }
 }
