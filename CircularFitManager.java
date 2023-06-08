@@ -2,15 +2,15 @@ public class CircularFitManager extends MemoryManager {
 
     int pointer;
 
-    public CircularFitManager(int size) {
-        super(size);
+    public CircularFitManager(int size, PartitionFactory partFactory) {
+        super(size, partFactory);
         this.pointer = 0;
     }
 
     public void In(Proccess proc) {
 
         if (memory.size() == 0) {
-            Partition part = new Partition(0, proc.size, proc);
+            Partition part = partFactory.Create(0, proc);
             memory.add(part);
             pointer = 0;
             return;
@@ -21,20 +21,20 @@ public class CircularFitManager extends MemoryManager {
 
             if (i == memory.size() - 1) {
                 Partition curr = memory.get(i);
-                if (super.size - memory.get(i).end >= proc.size) {
-                    Partition part = new Partition(curr.end, curr.end + proc.size, proc);
+                if (partFactory.Fit(memory.get(i).end, super.size, proc)) {
+                    Partition part = partFactory.Create(curr.end, proc);
                     memory.add(part);
                     pointer = i + 1;
                     return;
-                } else if (memory.get(0).start >= proc.size) {
-                    Partition part = new Partition(0, proc.size, proc);
+                } else if (partFactory.Fit(0, memory.get(0).start, proc)) {
+                    Partition part = partFactory.Create(0, proc);
                     memory.add(0, part);
                     pointer = 0;
                     return;
                 }
-            } else if (memory.get(i+1).start - memory.get(i).end >= proc.size) {
+            } else if (partFactory.Fit(memory.get(i).end, memory.get(i+1).start, proc)) {
                 int start = memory.get(i).end;
-                Partition part = new Partition(start, start + proc.size, proc);
+                Partition part = partFactory.Create(start, proc);
                 memory.add(i+1, part);
                 pointer = i+1;
                 return;

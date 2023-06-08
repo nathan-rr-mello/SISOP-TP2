@@ -5,10 +5,12 @@ public abstract class MemoryManager {
     
     int size;
     List<Partition>memory;
+    PartitionFactory partFactory;
 
-    public MemoryManager(int size) {
+    public MemoryManager(int size, PartitionFactory partFactory) {
         this.size = size;
         this.memory =  new LinkedList<>();
+        this.partFactory = partFactory;
     }
 
     public abstract void In(Proccess proc);
