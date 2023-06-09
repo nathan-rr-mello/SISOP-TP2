@@ -24,7 +24,7 @@ public class WorstFitManager extends MemoryManager {
                 currentWorst = currentFreeSpace;
                 worstStart = start;
             }
-            start = currPartition.end;
+            start = currPartition.end + 1;
         }
 
         if (super.size - start > currentWorst) {

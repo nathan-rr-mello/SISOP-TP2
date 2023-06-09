@@ -5,6 +5,6 @@ public class VariablePartitionFactory implements PartitionFactory {
     }
 
     public Partition Create(int start, Proccess proccess) {
-        return new Partition(start, start + proccess.size, proccess);
+        return new Partition(start, start + proccess.size - 1, proccess);
     }
 }

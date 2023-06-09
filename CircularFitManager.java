@@ -22,7 +22,7 @@ public class CircularFitManager extends MemoryManager {
             if (i == memory.size() - 1) {
                 Partition curr = memory.get(i);
                 if (partFactory.Fit(memory.get(i).end, super.size, proc)) {
-                    Partition part = partFactory.Create(curr.end, proc);
+                    Partition part = partFactory.Create(curr.end + 1, proc);
                     memory.add(part);
                     pointer = i + 1;
                     return;
@@ -33,7 +33,7 @@ public class CircularFitManager extends MemoryManager {
                     return;
                 }
             } else if (partFactory.Fit(memory.get(i).end, memory.get(i+1).start, proc)) {
-                int start = memory.get(i).end;
+                int start = memory.get(i).end + 1;
                 Partition part = partFactory.Create(start, proc);
                 memory.add(i+1, part);
                 pointer = i+1;

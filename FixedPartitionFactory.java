@@ -11,6 +11,6 @@ public class FixedPartitionFactory implements PartitionFactory {
     }
 
     public Partition Create(int start, Proccess proc) {
-        return new Partition(start, start + size, proc);
+        return new Partition(start, start + this.size - 1, proc);
     }
 }
