@@ -17,8 +17,8 @@ public class Main {
                     Proccess p = new Proccess( arg[0], Integer.parseInt(arg[1]));
                     mm.In(p);
                 } else {
-                    String[] arg = line.replaceAll("[)]", "").split("\\(")[1].split(", ");
-                    mm.Out(arg[0]);
+                    String arg = line.replaceAll("[)]", "").split("\\(")[1];
+                    mm.Out(arg);
                 }
                 mm.Print();
                 System.out.println("<==================================>");
