@@ -1,16 +1,16 @@
-public class CircularFitManager extends MemoryManager {
+public class CircularFitAllocator extends MemoryAllocator {
 
-    int pointer;
+    private int pointer;
 
-    public CircularFitManager(int size, PartitionFactory partFactory) {
-        super(size, partFactory);
+    public CircularFitAllocator(int size) {
+        super(size);
         this.pointer = 0;
     }
 
     public void In(Proccess proc) {
 
         if (memory.size() == 0) {
-            Partition part = partFactory.Create(0, proc);
+            Partition part = new Partition(0, proc.size - 1, proc);
             memory.add(part);
             pointer = 0;
             return;
@@ -21,20 +21,20 @@ public class CircularFitManager extends MemoryManager {
 
             if (i == memory.size() - 1) {
                 Partition curr = memory.get(i);
-                if (partFactory.Fit(memory.get(i).end, super.size, proc)) {
-                    Partition part = partFactory.Create(curr.end + 1, proc);
+                if (super.size - memory.get(i).end >= proc.size) {
+                    Partition part = new Partition(curr.end + 1, curr.end + proc.size, proc);
                     memory.add(part);
                     pointer = i + 1;
                     return;
-                } else if (partFactory.Fit(0, memory.get(0).start, proc)) {
-                    Partition part = partFactory.Create(0, proc);
+                } else if (memory.get(0).start >= proc.size) {
+                    Partition part = new Partition(0, proc.size - 1, proc);
                     memory.add(0, part);
                     pointer = 0;
                     return;
                 }
-            } else if (partFactory.Fit(memory.get(i).end, memory.get(i+1).start, proc)) {
+            } else if (memory.get(i+1).start - memory.get(i).end >= proc.size) {
                 int start = memory.get(i).end + 1;
-                Partition part = partFactory.Create(start, proc);
+                Partition part = new Partition(start, start + proc.size - 1, proc);
                 memory.add(i+1, part);
                 pointer = i+1;
                 return;
@@ -43,7 +43,7 @@ public class CircularFitManager extends MemoryManager {
             i = (i+1) % memory.size();
         }while(i != pointer);
 
-        System.out.println("[ERROR] - THERE IS NO SPACE LEFT ON DISK");
+        System.out.println("[ERROR] - THERE IS NO SPACE LEFT ON MEMORY");
     }
 
     public void Out(String pid) {

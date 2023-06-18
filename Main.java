@@ -6,7 +6,7 @@ public class Main {
 
     public static void main(String[] args) {
         
-        PartitionFactory partFactory = new FixedPartitionFactory(8);
+        /* PartitionFactory partFactory = new FixedPartitionFactory(8);
         MemoryManager mm = new CircularFitManager(32, partFactory);
 
         try (BufferedReader br = new BufferedReader(new FileReader("asm/asm1.txt"))) {
@@ -25,6 +25,16 @@ public class Main {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        } */
+
+        FixedPartitionManager fpm = new FixedPartitionManager(32);
+
+        Proccess a = new Proccess("A", 4);
+        Proccess b = new Proccess("B", 8);
+
+        fpm.In(a);
+        fpm.In(b);
+        fpm.Print();
+
     }
 }

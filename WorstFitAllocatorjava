@@ -1,13 +1,13 @@
-public class WorstFitManager extends MemoryManager {
+public class WorstFitAllocator extends MemoryAllocator {
     
-    public WorstFitManager(int size, PartitionFactory partFactory) {
-        super(size, partFactory);
+    public WorstFitAllocator(int size) {
+        super(size);
     }
 
     public void In(Proccess proc) {
 
         if (super.memory.size() == 0) {
-            Partition part = partFactory.Create(0, proc);
+            Partition part = new Partition(0, proc.size - 1, proc);
             super.memory.add(part);
             return;
         }
@@ -28,16 +28,16 @@ public class WorstFitManager extends MemoryManager {
         }
 
         if (super.size - start > currentWorst) {
-            Partition part = partFactory.Create(start, proc);
+            Partition part = new Partition(start, start + proc.size - 1, proc);
             super.memory.add(part);
             return;
         }
 
         if (indexToSwitch != -1) {
-            Partition part = partFactory.Create(worstStart, proc);
+            Partition part = new Partition(worstStart, worstStart + proc.size - 1, proc);
             super.memory.add(indexToSwitch, part);
         } else {
-            System.out.println("[ERROR] - THERE IS NO SPACE LEFT ON DISK");
+            System.out.println("[ERROR] - THERE IS NO SPACE LEFT ON MEMORY");
         }
     } 
 
