@@ -43,7 +43,7 @@ public class CircularFitAllocator extends MemoryAllocator {
             i = (i+1) % memory.size();
         }while(i != pointer);
 
-        System.out.println("[ERROR] - THERE IS NO SPACE LEFT ON MEMORY");
+        System.out.println("[ERROR] - INSUFFICIENT MEMORY SPACE");
     }
 
     public void Out(String pid) {

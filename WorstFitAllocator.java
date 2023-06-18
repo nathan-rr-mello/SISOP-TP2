@@ -37,7 +37,7 @@ public class WorstFitAllocator extends MemoryAllocator {
             Partition part = new Partition(worstStart, worstStart + proc.size - 1, proc);
             super.memory.add(indexToSwitch, part);
         } else {
-            System.out.println("[ERROR] - THERE IS NO SPACE LEFT ON MEMORY");
+            System.out.println("[ERROR] - INSUFFICIENT MEMORY SPACE");
         }
     } 
 

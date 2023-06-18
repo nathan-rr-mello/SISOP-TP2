@@ -29,12 +29,19 @@ public class Main {
 
         FixedPartitionManager fpm = new FixedPartitionManager(32);
 
-        Proccess a = new Proccess("A", 4);
-        Proccess b = new Proccess("B", 8);
+        Proccess a = new Proccess("A", 8);
+        Proccess b = new Proccess("B", 4);
+        Proccess c = new Proccess("C", 8);
+
 
         fpm.In(a);
         fpm.In(b);
         fpm.Print();
-
+        System.out.println("<=================>");
+        fpm.Out("A");
+        fpm.Print();
+        System.out.println("<=================>");
+        fpm.In(c);
+        fpm.Print();
     }
 }

@@ -23,6 +23,14 @@ public class FixedPartitionManager implements MemoryManager {
         public boolean isEmpty() {
             return process == null;
         }
+
+        public boolean contains(String pid) {
+            return process.pid.equals(pid);
+        }
+
+        public boolean isLeaf() {
+            return left == null && right == null;
+        }
     }
     
     private int size;
@@ -36,88 +44,58 @@ public class FixedPartitionManager implements MemoryManager {
     public void In(Proccess proc) {
 
        if (!insert(root, proc)) {
-            System.out.println("[ERROR] - COULD NOT MOVE PROCESS TO MEMORY");
+            System.out.println("[ERROR] - INSUFFICIENT MEMORY SPACE");
        };
     }
 
     private boolean insert(Segment node, Proccess proc) {
 
-       /*  if (node.size() >= proc.size && node.size() < proc.size * 2) {
-            node.process = proc;
-            return true;
-        } else {
-            int middle = (node.start + node.end) / 2;
-            if (node.left == null) node.left = new Segment(node.start, middle);
-            if (insert(node.left, proc)) return true;
-            if (node.right == null) node.right =  new Segment(middle + 1, node.end);
-            if (insert(node.right, proc)) return true;
+        if (node.left == null && node.right == null) {
+            if (node.size() < proc.size || !node.isEmpty()) {
+                System.out.println("ocupado");
+                return false;
+            }
+            if (node.size() < proc.size * 2) {
+                if (!node.isEmpty()) return false;
+                node.process = proc;
+                return true;
+            } else {
+                int middle = (node.start + node.end) / 2;
+                node.left = new Segment(node.start, middle);
+                node.right = new Segment(middle + 1, node.end);
+                return insert(node.left, proc) || insert(node.right, proc);
+            }
+        } else if (node.size() >= proc.size * 2) {
+            return insert(node.left, proc) || insert(node.right, proc);
         }
-
-        return false; */
-
-        if (node.process != null) {
-        return false; // Segmento já está ocupado
-    }
-
-    if (node.size() == proc.size) {
-        node.process = proc;
-        return true; // Segmento alocado com sucesso
-    }
-
-    if (node.size() < proc.size) {
-        return false; // Segmento não é grande o suficiente para alocar o processo
-    }
-
-    // Divide o segmento em dois
-    int middle = (node.start + node.end) / 2;
-    node.left = new Segment(node.start, middle);
-    node.right = new Segment(middle + 1, node.end);
-
-    // Tenta alocar o processo no segmento esquerdo
-    if (insert(node.left, proc)) {
-        return true;
-    }
-
-    // Tenta alocar o processo no segmento direito
-    if (insert(node.right, proc)) {
-        return true;
-    }
-
-    // Não foi possível alocar o processo em nenhum dos segmentos filhos
-    return false;
+        return false;
     }
 
     public void Out(String pid) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'Out'");
-
-
+  
+        remove(root, pid);
     }
 
     private boolean remove(Segment node, String pid) {
-
-        if (node.left != null) {
-            if (node.left.process.pid.equals(pid)) {
-
-            }
-        }  
-
-        if (node.isEmpty()) {
-            if (node.left != null && remove(node.left, pid)) {
-                if (node.left.isEmpty() && node.right.isEmpty()) {
+        
+        if (!node.isLeaf()) {
+            if (remove(node.left, pid)) {
+                if (node.right.isLeaf() && node.right.isEmpty()) {
                     node.left = null;
                     node.right = null;
+                    return true;
                 }
-                return true;
-            } 
-            if (node.right != null && remove(node.right, pid)) {
-                if (node.left.isEmpty() && node.right.isEmpty()) {
+                return false;
+            };
+            if (remove(node.right, pid)) {
+                if (node.left.isLeaf() && node.left.isEmpty()) {
                     node.left = null;
                     node.right = null;
+                    return true;
                 }
-                return true;
-            } 
-        } else if (node.process.pid.equals(pid)) {
+                return false;
+            };
+        } else if (!node.isEmpty() && node.contains(pid)) {
             node.process = null;
             return true;
         }
