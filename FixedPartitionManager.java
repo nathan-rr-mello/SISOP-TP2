@@ -52,7 +52,7 @@ public class FixedPartitionManager implements MemoryManager {
 
         if (node.left == null && node.right == null) {
             if (node.size() < proc.size || !node.isEmpty()) {
-                System.out.println("ocupado");
+                //System.out.println("ocupado");
                 return false;
             }
             if (node.size() < proc.size * 2) {
